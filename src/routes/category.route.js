@@ -8,8 +8,8 @@ const categoryController = new CategoryController( { categoryModel: CategoryMode
 
 categoryRouter.get( '/:id', categoryController.getAllBySeason )
 
-// categoryRouter.post( '/', categoryController.create )
+categoryRouter.post( '/', categoryController.create )
 
-// categoryRouter.put( '/:id', categoryController.update )
+categoryRouter.put( '/:id', categoryController.update )
 
-// categoryRouter.delete( '/:id', categoryController.delete )
+categoryRouter.delete( '/:id', categoryController.delete )

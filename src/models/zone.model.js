@@ -12,46 +12,30 @@ const connectionString = process.env.DATABASE_URL ?? DEFAULT_CONFIG
 
 const connection = await mysql.createConnection( connectionString )
 
-export class SeasonModel {
-  static async getAllBySeason ( { idTorneo } ) {
+export class ZoneModel {
+  static async getAllByCategory ( { idCategoria } ) {
     console.log( 'getAll' )
     // TODO ver si temporada existe o no
     try {
-      const [zones] = await connection.query( 'SELECT * FROM zona WHERE id_torneo = ?;', [idTorneo] )
+      const [zones] = await connection.query( 'SELECT * FROM zona WHERE id_categoria= ?;', [idCategoria] )
       // console.log( response )
       return zones
     } catch ( error ) {
-      throw new Error( 'Error getting seasons' )
+      throw new Error( 'Error getting zones' )
     }
-    // return null
-
-    // if (torunament.length === 0) return null
-
-    // 'SELECT id, name FROM genre WHERE LOWER(name) = ?;')
   }
-
-  // static async getById ( { id } ) {
-  //   const [torunament] = await connection.query(
-  //     'SELECT * FROM torneo WHERE id_torneo = ?;', [id] )
-
-  //   if ( torunament.length === 0 ) return null
-
-  //   return torunament[0]
-  // }
 
   static async create ( { input } ) {
     const {
       name,
-      idTournament,
-      startDate
+      idCategory
     } = input
-    console.log( startDate )
     let insertId = null
     try {
       const [response] = await connection.query(
-        `INSERT INTO temporada (nombre, id_torneo, fecha_inicio)
-          VALUES ( ?, ?, ?);`,
-        [name, idTournament, startDate]
+        `INSERT INTO zona (nombre, id_categoria)
+          VALUES ( ?, ? );`,
+        [name, idCategory]
       )
       if ( response && response.insertId ) {
         insertId = response.insertId
@@ -60,7 +44,7 @@ export class SeasonModel {
     } catch ( e ) {
       // puede enviarle información sensible
       console.log( e.message )
-      throw new Error( 'Error creating season' )
+      throw new Error( 'Error creating zone' )
       // enviar la traza a un servicio interno
       // sendLog(e)
     }
@@ -69,69 +53,69 @@ export class SeasonModel {
     if ( insertId !== null ) {
       const [seasons] = await connection.query(
         `SELECT *
-        FROM temporada WHERE id_temporada = ?;`, [insertId]
+        FROM zona WHERE id_zona = ?;`, [insertId]
       )
 
       // Verificar si se encontró algún torneo
       if ( seasons.length > 0 ) {
         return seasons[0] // Devolver el torneo encontrado
       } else {
-        throw new Error( 'season not found' ) // Si no se encuentra ningún torneo
+        throw new Error( 'Zone not found' ) // Si no se encuentra ningún torneo
       }
     } else {
-      throw new Error( 'Error inserting season' ) // Si insertId es null
+      throw new Error( 'Error inserting zone' ) // Si insertId es null
     }
   }
 
-  static async update ( { id, input } ) {
+  static async update ( { idZone, input } ) {
     const { name } = input
     // todo controlar si el torneo existe
     try {
       // Realizar la consulta de actualización
       const [response] = await connection.query(
-        'UPDATE temporada SET nombre = ? WHERE id_temporada = ?;',
-        [name, id]
+        'UPDATE zona SET nombre = ? WHERE id_zona = ?;',
+        [name, idZone]
       )
       console.log( response )
       // Verificar si la consulta de actualización fue exitosa
       if ( response && response.affectedRows > 0 ) {
         // Consultar el torneo actualizado
-        const [updatedTournament] = await connection.query(
-          'SELECT * FROM temporada WHERE id_temporada = ?;',
-          [id]
+        const [updatedZone] = await connection.query(
+          'SELECT * FROM zona WHERE id_zona = ?;',
+          [idZone]
         )
 
         // Verificar si se encontró el torneo actualizado
-        if ( updatedTournament.length > 0 ) {
-          return updatedTournament[0] // Devolver el torneo actualizado
+        if ( updatedZone.length > 0 ) {
+          return updatedZone[0] // Devolver el torneo actualizado
         } else {
-          throw new Error( 'Updated season not found' ) // Si el torneo actualizado no se encuentra
+          throw new Error( 'Updated zone not found' ) // Si el torneo actualizado no se encuentra
         }
       } else {
-        throw new Error( 'season update failed' ) // Si la consulta de actualización no afectó ninguna fila
+        throw new Error( 'Zone update failed' ) // Si la consulta de actualización no afectó ninguna fila
       }
     } catch ( e ) {
       // Puedes manejar el error como mejor convenga a tu aplicación
       console.log( e.message )
-      throw new Error( 'Error updating tournament: ' )
+      throw new Error( 'Error updating zone ' )
     }
   }
 
-  static async delete ( { id } ) {
+  static async delete ( { idZone } ) {
     try {
       const [response] = await connection.query(
-        'DELETE FROM temporada WHERE id_temporada = ?;',
-        [id]
+        'DELETE FROM zona WHERE id_zona = ?;',
+        [idZone]
       )
 
       if ( response && response.affectedRows > 0 ) {
         return true // Devolver verdadero si se eliminó correctamente
       } else {
-        throw new Error( 'Season not found or already deleted' ) // Si el torneo no se encuentra o ya ha sido eliminado
+        throw new Error( 'Zone not found or already deleted' ) // Si el torneo no se encuentra o ya ha sido eliminado
       }
     } catch ( e ) {
       console.log( e.message )
-      throw new Error( 'Error deleting season' )
+      throw new Error( 'Error deleting Zone' )
     }
   }
 }

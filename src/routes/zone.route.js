@@ -1,14 +1,16 @@
 import { Router } from 'express'
+import { ZoneController } from '../controllers/zone.controller.js'
+import { ZoneModel } from '../models/zone.model.js'
 
 export const zoneRouter = Router()
 
-// const seasonController = new SeasonController( { seasonModel: SeasonModel } )
+const zoneController = new ZoneController( { zoneModel: ZoneModel } )
 
 // seasonRouter.get( '/', tournamentController.getAll )
-// zoneRouter.get( '/:id', seasonController.getAllByTorneo )
+zoneRouter.get( '/:idCategory', zoneController.getAllByCategory )
 
-// zoneRouter.post( '/', seasonController.create )
+zoneRouter.post( '/', zoneController.create )
 
-// zoneRouter.put( '/:id', seasonController.update )
+zoneRouter.put( '/:idZone', zoneController.update )
 
-// zoneRouter.delete( '/:id', seasonController.delete )
+zoneRouter.delete( '/:idZone', zoneController.delete )

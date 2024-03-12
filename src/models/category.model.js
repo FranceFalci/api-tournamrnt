@@ -38,16 +38,14 @@ export class CategoryModel {
   static async create ( { input } ) {
     const {
       name,
-      idTournament,
-      startDate
+      idSeason
     } = input
-    console.log( startDate )
     let insertId = null
     try {
       const [response] = await connection.query(
-        `INSERT INTO temporada (nombre, id_torneo, fecha_inicio)
-          VALUES ( ?, ?, ?);`,
-        [name, idTournament, startDate]
+        `INSERT INTO categoria (nombre, id_temporada)
+          VALUES ( ?, ?);`,
+        [name, idSeason]
       )
       if ( response && response.insertId ) {
         insertId = response.insertId
@@ -56,26 +54,26 @@ export class CategoryModel {
     } catch ( e ) {
       // puede enviarle información sensible
       console.log( e.message )
-      throw new Error( 'Error creating season' )
+      throw new Error( 'Error creating category' )
       // enviar la traza a un servicio interno
       // sendLog(e)
     }
 
     // Verificar si insertId es null o no
     if ( insertId !== null ) {
-      const [seasons] = await connection.query(
+      const [categories] = await connection.query(
         `SELECT *
-        FROM temporada WHERE id_temporada = ?;`, [insertId]
+        FROM categoria WHERE id_categoria = ?;`, [insertId]
       )
 
       // Verificar si se encontró algún torneo
-      if ( seasons.length > 0 ) {
-        return seasons[0] // Devolver el torneo encontrado
+      if ( categories.length > 0 ) {
+        return categories[0] // Devolver el torneo encontrado
       } else {
-        throw new Error( 'season not found' ) // Si no se encuentra ningún torneo
+        throw new Error( 'Category not found' ) // Si no se encuentra ningún torneo
       }
     } else {
-      throw new Error( 'Error inserting season' ) // Si insertId es null
+      throw new Error( 'Error inserting category' ) // Si insertId es null
     }
   }
 
@@ -85,49 +83,49 @@ export class CategoryModel {
     try {
       // Realizar la consulta de actualización
       const [response] = await connection.query(
-        'UPDATE temporada SET nombre = ? WHERE id_temporada = ?;',
+        'UPDATE categoria SET nombre = ? WHERE id_categoria = ?;',
         [name, id]
       )
       console.log( response )
       // Verificar si la consulta de actualización fue exitosa
       if ( response && response.affectedRows > 0 ) {
         // Consultar el torneo actualizado
-        const [updatedTournament] = await connection.query(
-          'SELECT * FROM temporada WHERE id_temporada = ?;',
+        const [updatedCategory] = await connection.query(
+          'SELECT * FROM categoria WHERE id_categoria = ?;',
           [id]
         )
 
         // Verificar si se encontró el torneo actualizado
-        if ( updatedTournament.length > 0 ) {
-          return updatedTournament[0] // Devolver el torneo actualizado
+        if ( updatedCategory.length > 0 ) {
+          return updatedCategory[0] // Devolver el torneo actualizado
         } else {
-          throw new Error( 'Updated season not found' ) // Si el torneo actualizado no se encuentra
+          throw new Error( 'Updated categoy not found' ) // Si el torneo actualizado no se encuentra
         }
       } else {
-        throw new Error( 'season update failed' ) // Si la consulta de actualización no afectó ninguna fila
+        throw new Error( 'category update failed' ) // Si la consulta de actualización no afectó ninguna fila
       }
     } catch ( e ) {
       // Puedes manejar el error como mejor convenga a tu aplicación
       console.log( e.message )
-      throw new Error( 'Error updating tournament: ' )
+      throw new Error( 'Error updating category ' )
     }
   }
 
   static async delete ( { id } ) {
     try {
       const [response] = await connection.query(
-        'DELETE FROM temporada WHERE id_temporada = ?;',
+        'DELETE FROM categoria WHERE id_categoria = ?;',
         [id]
       )
 
       if ( response && response.affectedRows > 0 ) {
         return true // Devolver verdadero si se eliminó correctamente
       } else {
-        throw new Error( 'Season not found or already deleted' ) // Si el torneo no se encuentra o ya ha sido eliminado
+        throw new Error( 'Category not found or already deleted' ) // Si el torneo no se encuentra o ya ha sido eliminado
       }
     } catch ( e ) {
       console.log( e.message )
-      throw new Error( 'Error deleting season' )
+      throw new Error( 'Error deleting Category' )
     }
   }
 }

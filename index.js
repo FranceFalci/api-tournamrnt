@@ -4,6 +4,7 @@ import { tournamentRouter } from './src/routes/torunament.route.js'
 import { seasonRouter } from './src/routes/season.route.js'
 import { zoneRouter } from './src/routes/zone.route.js'
 import { categoryRouter } from './src/routes/category.route.js'
+import { teamRouter } from './src/routes/team.route.js'
 
 const app = express()
 app.use( express.json() )
@@ -15,6 +16,7 @@ app.use( '/api/tournament/', tournamentRouter )
 app.use( '/api/season/', seasonRouter )
 app.use( '/api/category/', categoryRouter )
 app.use( '/api/zone/', zoneRouter )
+app.use( '/api/team/', teamRouter )
 
 app.listen( 3002, ( req, res ) => {
   console.log( 'servidor conrriendo en el puerto', process.env.PORT )

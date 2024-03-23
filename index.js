@@ -6,6 +6,7 @@ import { zoneRouter } from './src/routes/zone.route.js'
 import { categoryRouter } from './src/routes/category.route.js'
 import { teamRouter } from './src/routes/team.route.js'
 import { playerRouter } from './src/routes/player.route.js'
+import { matchRouter } from './src/routes/match.route.js'
 
 const app = express()
 app.use( express.json() )
@@ -19,7 +20,8 @@ app.use( '/api/category/', categoryRouter )
 app.use( '/api/zone/', zoneRouter )
 app.use( '/api/team/', teamRouter )
 app.use( '/api/player/', playerRouter )
+app.use( '/api/match/', matchRouter )
 
 app.listen( 3002, ( req, res ) => {
-  console.log( 'servidor conrriendo en el puerto', process.env.PORT )
+  console.log( 'servidor conrriendo en el puerto', 3002 )
 } )

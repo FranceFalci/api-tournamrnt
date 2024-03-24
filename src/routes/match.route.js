@@ -9,6 +9,7 @@ const matchController = new MatchController( { matchModel: MatchModel } )
 matchRouter.get( '/:idMatch', matchController.getById )
 
 matchRouter.get( '/category/:idCategory', matchController.getAllByCategory )
+matchRouter.get( '/phase/:idPhase', matchController.getAllByPhase )
 
 matchRouter.post( '/', matchController.create )
 

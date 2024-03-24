@@ -4,6 +4,7 @@ const matchSchema = z.object( {
   idCategory: z.number().int().gte( 0 ),
   idTeamOne: z.number().int().gte( 0 ),
   idTeamTwo: z.number().int().gte( 0 ),
+  idPhase: z.number().int().gte( 0 ).optional(),
   resultOne: z.number().int().gte( 0 ).optional(),
   resultTwo: z.number().int().gte( 0 ).optional(),
   date: z.string().datetime().transform( ( val ) => val.substring( 0, 10 ) ).nullable(),

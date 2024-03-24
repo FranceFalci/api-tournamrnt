@@ -15,6 +15,16 @@ export class MatchController {
     }
   }
 
+  getAllByPhase = async ( req, res ) => {
+    const { idPhase } = req.params
+    try {
+      const matches = await this.matchModel.getAllByPhase( { idPhase } )
+      if ( matches ) return res.json( matches )
+    } catch ( error ) {
+      res.status( 404 ).json( { message: error.message } )
+    }
+  }
+
   getById = async ( req, res ) => {
     const { idMatch } = req.params
     try {

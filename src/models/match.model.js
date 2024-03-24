@@ -24,6 +24,16 @@ export class MatchModel {
     }
   }
 
+  static async getAllByPhase ( { idPhase } ) {
+    try {
+      const [matches] = await connection.query( ' SELECT * FROM partido INNER JOIN resultado_partido USING(id_partido) WHERE id_fase=? ORDER BY num_fecha;', [idPhase] )
+      return matches
+    } catch ( error ) {
+      console.log( error.message )
+      throw new Error( 'Error getting matches' )
+    }
+  }
+
   static async getById ( { idMatch } ) {
     try {
       const [match] = await connection.query(
@@ -45,14 +55,15 @@ export class MatchModel {
       field,
       state,
       numDate,
-      idCategory
+      idCategory,
+      idPhase
     } = input
     let insertId = null
     console.log( 'antes del try' )
     try {
       const [response] = await connection.query(
-        'INSERT INTO partido (fecha,hora,cancha,estado,num_fecha,id_categoria ) VALUES (?,?,?,?,?,?);',
-        [date, hour, field, state, numDate, idCategory]
+        'INSERT INTO partido (fecha,hora,cancha,estado,num_fecha,id_categoria ,id_fase) VALUES (?,?,?,?,?,?,?);',
+        [date, hour, field, state, numDate, idCategory, idPhase]
       )
       if ( response && response.insertId ) {
         insertId = response.insertId
@@ -118,13 +129,15 @@ export class MatchModel {
       numDate,
       date,
       hour,
-      field
+      field,
+      idPhase
+
     } = input
     // todo controlar si el torneo existe
     try {
       const [response] = await connection.query(
-        'UPDATE partido SET estado = IFNULL(?, estado) , num_fecha  = IFNULL(?, num_fecha) ,fecha = IFNULL(?,fecha),hora = IFNULL(?,hora),cancha = IFNULL(?,cancha) WHERE id_partido = ?;',
-        [state, numDate, date, hour, field, idMatch]
+        'UPDATE partido SET estado = IFNULL(?, estado) , num_fecha  = IFNULL(?, num_fecha) ,fecha = IFNULL(?,fecha),hora = IFNULL(?,hora),cancha = IFNULL(?,cancha) ,id_fase = IFNULL(?,id_fase) WHERE id_partido = ?;',
+        [state, numDate, date, hour, field, idPhase, idMatch]
       )
       console.log( 'en update' )
 

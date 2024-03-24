@@ -9,6 +9,7 @@ import { playerRouter } from './src/routes/player.route.js'
 import { matchRouter } from './src/routes/match.route.js'
 import { sheetRouter } from './src/routes/sheet.route .js'
 import { cupRouter } from './src/routes/cup.route.js'
+import { phaseRouter } from './src/routes/phase.route.js'
 
 const app = express()
 app.use( express.json() )
@@ -25,6 +26,7 @@ app.use( '/api/player/', playerRouter )
 app.use( '/api/match/', matchRouter )
 app.use( '/api/sheet/', sheetRouter )
 app.use( '/api/cup/', cupRouter )
+app.use( '/api/phase/', phaseRouter )
 
 app.listen( 3002, ( req, res ) => {
   console.log( 'servidor conrriendo en el puerto', 3002 )

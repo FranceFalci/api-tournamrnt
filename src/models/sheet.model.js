@@ -16,7 +16,6 @@ export class SheetModel {
   static async getAllByMatch ( { idMatch } ) {
     try {
       const [sheets] = await connection.query( 'SELECT * FROM ficha WHERE id_partido= ?;', [idMatch] )
-      // console.log( response )
       return sheets
     } catch ( error ) {
       throw new Error( 'Error getting sheets' )
@@ -41,7 +40,6 @@ export class SheetModel {
       if ( response && response.insertId ) {
         insertId = response.insertId
       }
-      console.log( insertId, response )
     } catch ( e ) {
       console.log( e.message )
       throw new Error( 'Error creating sheet' )
@@ -109,7 +107,7 @@ export class SheetModel {
       if ( response && response.affectedRows > 0 ) {
         return true
       } else {
-        throw new Error( 'Shet not found or already deleted' ) // Si el torneo no se encuentra o ya ha sido eliminado
+        throw new Error( 'Shet not found or already deleted' )
       }
     } catch ( e ) {
       console.log( e.message )
